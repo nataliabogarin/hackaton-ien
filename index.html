@@ -269,6 +269,30 @@
   color:var(--teal);
 }
 
+.form-status.is-complete{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:var(--teal-bg);
+  border:1.5px solid var(--teal);
+  color:var(--teal);
+  font-weight:700;
+}
+
+.status-check{
+  width:22px;
+  height:22px;
+  min-width:22px;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--teal);
+  color:#fff;
+  font-size:.8rem;
+  line-height:1;
+}
+
 
 /* TEMAS */
 
@@ -924,7 +948,7 @@ async function loadTopics(){
   }
 }
 
-async function loadAssignments(){
+async function loadAssignments(options = {}){
 
   try{
 
@@ -944,7 +968,20 @@ async function loadAssignments(){
       );
     }
 
-    assignments = data.selections || [];
+    const nextAssignments = data.selections || [];
+
+    if(
+      nextAssignments.length === 0 &&
+      assignments.length > 0 &&
+      !options.allowEmpty
+    ){
+      console.warn(
+        'La API devolvió 0 selecciones; se conservan las selecciones cargadas.'
+      );
+      return;
+    }
+
+    assignments = nextAssignments;
 
   }catch(error){
 
@@ -963,10 +1000,22 @@ function myAssignedTopic(){
 
 }
 
+function normalizeValue(value){
+  return String(value || '').trim().toLowerCase();
+}
+
+function sameTopic(topicA, topicB){
+  return normalizeValue(topicA) === normalizeValue(topicB);
+}
+
+function sameGroup(groupA, groupB){
+  return normalizeValue(groupA) === normalizeValue(groupB);
+}
+
 function topicAssignments(topicId){
 
   return assignments.filter(
-    item => item.ejeId === topicId
+    item => sameTopic(item.ejeId, topicId)
   );
 
 }
@@ -984,16 +1033,22 @@ function getGroupSelection(){
   if(!myGroup) return null;
 
   return assignments.find(
-    item =>
-      String(item.grupo).toLowerCase() ===
-      String(myGroup).toLowerCase()
+    item => sameGroup(item.grupo, myGroup)
   ) || null;
 
 }
 
+function registeredGroupCount(){
+  return new Set(
+    assignments
+      .map(item => normalizeValue(item.grupo))
+      .filter(Boolean)
+  ).size;
+}
+
 function render(){
 
-  const registeredGroups = assignments.length;
+  const registeredGroups = registeredGroupCount();
 
   const availableTopics = topics.filter(
     topic => !topicIsFull(topic)
@@ -1013,6 +1068,8 @@ function render(){
   // =========================
   // ESTADO DEL EQUIPO
   // =========================
+
+  statusLine.classList.remove('is-complete');
 
   if(!myGroup){
 
@@ -1049,10 +1106,13 @@ function render(){
     escapeHTML(groupSelection.tema) +
     '</strong>';
 
+  statusLine.classList.add('is-complete');
+
   statusLine.innerHTML =
-    '✓ <strong>' +
-    escapeHTML(groupSelection.equipo) +
-    '</strong> ya realizó su elección.';
+    '<span class="status-check" aria-hidden="true">✓</span>' +
+    '<span>Hola ' +
+    escapeHTML(myGroup) +
+    ', ya realizaste tu selección.</span>';
 
 
 }else{
@@ -1101,7 +1161,7 @@ function render(){
 
     if(
       groupSelection &&
-      groupSelection.ejeId === topic.id
+      sameTopic(groupSelection.ejeId, topic.id)
     ){
 
       div.classList.add('mine');
@@ -1134,78 +1194,27 @@ function render(){
 
     tagEl.className = 'topic-tag';
 
+    // =========================
+    // EJE ELEGIDO POR ESTE EQUIPO
+    // =========================
+
     if(
-  groupSelection &&
-  groupSelection.ejeId === topic.id
-){
+      groupSelection &&
+      sameTopic(groupSelection.ejeId, topic.id)
+    ){
 
-  div.classList.add('mine');
-  div.classList.add('disabled');
+      div.classList.add('mine');
+      div.classList.add('disabled');
 
-  tagEl.textContent =
-    '✓ Eje elegido por tu equipo';
-
-
-}else if(full){
-
-  div.classList.add('taken');
-
-  tagEl.textContent =
-    'Completo — ' +
-    selected.length +
-    ' de ' +
-    cupo +
-    ' equipos';
-
-
-}else{
-
-  if(selected.length === 0){
-
-    tagEl.textContent =
-      topic.tag +
-      ' · 0 de ' +
-      cupo +
-      ' equipos';
-
-  }else{
-
-    tagEl.textContent =
-      selected.length +
-      ' de ' +
-      cupo +
-      ' equipos · queda ' +
-      (cupo - selected.length) +
-      ' lugar';
-
-  }
-
-
-  if(
-    !myGroup ||
-    !teamName ||
-    groupSelection
-  ){
-
-    div.classList.add('disabled');
-
-  }else{
-
-    div.addEventListener(
-      'click',
-      () => selectTopic(topic)
-    );
-
-  }
-
-}
+      tagEl.textContent =
+        '✓ Eje elegido por tu equipo';
 
 
     // =========================
     // TEMA COMPLETO
     // =========================
 
-    if(full){
+    }else if(full){
 
       div.classList.add('taken');
 
@@ -1570,7 +1579,7 @@ document
       );
 
 
-      await loadAssignments();
+      await loadAssignments({ allowEmpty: true });
 
       render();
 
