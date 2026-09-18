@@ -1552,7 +1552,12 @@ document
 
     try {
 
-      const response = await fetch(API_URL, {
+      const resetUrl =
+        API_URL +
+        '?action=reset&password=' +
+        encodeURIComponent(password);
+
+      const response = await fetch(resetUrl, {
 
         method: 'POST',
 
