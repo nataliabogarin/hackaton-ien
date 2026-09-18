@@ -158,71 +158,221 @@
     margin-top: 3px;
   }
 
-  .picker{
-    background: var(--panel);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 18px 22px;
-    margin-bottom: 26px;
-    display:flex;
-    align-items:center;
-    gap: 18px;
-    flex-wrap: wrap;
-    box-shadow: 0 2px 10px rgba(43,15,78,0.04);
-  }
-  .picker label{
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    font-weight: 500;
-  }
-  .picker select{
-    background: var(--bg);
-    border: 1.5px solid var(--card-border);
-    color: var(--ink);
-    padding: 10px 16px;
-    border-radius: 999px;
-    font-size: 0.92rem;
-    font-family: inherit;
-    font-weight: 600;
-    min-width: 160px;
-    margin-top: 4px;
-  }
-  .picker .status{
-    font-size: 0.9rem;
-    color: var(--text-dim);
-  }
-  .picker .status strong{
-    color: var(--teal);
-  }
-  .picker select,
-.picker input{
-  background: var(--bg);
-  border: 1.5px solid var(--card-border);
-  color: var(--ink);
-  padding: 10px 16px;
-  border-radius: 999px;
-  font-size: 0.92rem;
-  font-family: inherit;
-  font-weight: 600;
-  min-width: 190px;
-  margin-top: 4px;
-  outline: none;
-  transition: border-color .15s ease, box-shadow .15s ease;
+
+.registration-panel,
+.topics-section,
+.submit-area{
+  background: var(--panel);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  box-shadow: 0 3px 14px rgba(43,15,78,0.05);
 }
 
-.picker input{
-  min-width: 230px;
+.registration-panel{
+  padding: 24px;
+  margin-bottom: 22px;
 }
 
-.picker select:focus,
-.picker input:focus{
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(245,197,24,0.15);
+.panel-heading,
+.section-heading{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:20px;
 }
 
-.picker input::placeholder{
-  color: #AAA2B7;
-  font-weight: 400;
+.step-number{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--gold);
+  color:var(--ink);
+  font-family:'Poppins', sans-serif;
+  font-weight:800;
+  font-size:.9rem;
+}
+
+.panel-heading h2,
+.section-heading h2{
+  margin:0;
+  font-family:'Poppins', sans-serif;
+  font-size:1.05rem;
+  color:var(--ink);
+}
+
+.panel-heading p,
+.section-heading p{
+  margin:3px 0 0;
+  color:var(--text-dim);
+  font-size:.82rem;
+}
+
+.form-row{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:16px;
+}
+
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.form-field label{
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--text-dim);
+}
+
+.form-field select,
+.form-field input{
+  width:100%;
+  height:46px;
+  background:var(--bg);
+  border:1.5px solid var(--card-border);
+  border-radius:12px;
+  padding:0 14px;
+  color:var(--ink);
+  font-family:'Inter', sans-serif;
+  font-size:.9rem;
+  outline:none;
+  transition:.15s ease;
+}
+
+.form-field select:focus,
+.form-field input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(245,197,24,.15);
+}
+
+.form-field select:disabled,
+.form-field input:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+.form-status{
+  margin-top:16px;
+  padding:11px 14px;
+  background:var(--bg);
+  border-radius:10px;
+  font-size:.82rem;
+  color:var(--text-dim);
+}
+
+.form-status strong{
+  color:var(--teal);
+}
+
+
+/* TEMAS */
+
+.topics-section{
+  padding:24px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+
+
+/* EJE SELECCIONADO */
+
+.topic.selected{
+  border-color:var(--gold);
+  box-shadow:0 0 0 2px var(--gold);
+  transform:translateY(-2px);
+}
+
+.topic.selected .topic-eje{
+  background:var(--gold);
+  color:var(--ink);
+}
+
+
+/* CONFIRMACIÓN */
+
+.submit-area{
+  margin-top:22px;
+  padding:20px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+.submit-content{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.submit-label{
+  font-family:'Poppins', sans-serif;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:3px;
+}
+
+.selected-topic-info{
+  color:var(--text-dim);
+  font-size:.82rem;
+}
+
+.selected-topic-info strong{
+  color:var(--ink);
+}
+
+.submit-btn{
+  border:0;
+  border-radius:999px;
+  padding:13px 24px;
+  background:var(--gold);
+  color:var(--ink);
+  font-family:'Poppins', sans-serif;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.submit-btn:hover:not(:disabled){
+  transform:translateY(-2px);
+}
+
+.submit-btn:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+}
+
+
+/* MOBILE */
+
+@media(max-width:750px){
+
+  .form-row{
+    grid-template-columns:1fr;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .submit-area{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .submit-btn{
+    width:100%;
+  }
+
 }
 
 .field-group{
@@ -394,6 +544,72 @@
   }
   .toast.error{ background: var(--danger); }
   .toast.success{ background: var(--teal); }
+  .submit-area{
+  margin-top: 28px;
+  background: var(--panel);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.selected-topic-info{
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.selected-topic-info strong{
+  color: var(--ink);
+}
+
+.submit-btn{
+  border: none;
+  background: var(--gold);
+  color: var(--ink);
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: transform .15s ease, opacity .15s ease;
+}
+
+.submit-btn:hover:not(:disabled){
+  transform: translateY(-2px);
+}
+
+.submit-btn:disabled{
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.topic.selected{
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(245,197,24,0.25);
+  transform: translateY(-3px);
+}
+
+.topic.selected .topic-eje{
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.topic.mine{
+  border-color:var(--teal);
+  background:var(--teal-bg);
+  opacity:1 !important;
+  box-shadow:0 0 0 2px var(--teal);
+}
+
+.topic.mine .topic-eje{
+  background:var(--teal);
+  color:#fff;
+}
 </style>
 </head>
 <body>
@@ -423,42 +639,119 @@
     </div>
   </div>
 
-  <div class="picker">
+<div class="registration-panel">
 
-  <div class="field-group">
-    <label for="groupSelect">Tu grupo</label><br>
-    <select id="groupSelect">
-      <option value="">— elegir grupo —</option>
-      <option value="Grupo 3">Grupo 3</option>
-      <option value="Grupo 5">Grupo 5</option>
-      <option value="Grupo 6">Grupo 6</option>
-      <option value="Grupo 7">Grupo 7</option>
-      <option value="Grupo 8">Grupo 8</option>
-      <option value="Grupo 10">Grupo 10</option>
-      <option value="Grupo 11">Grupo 11</option>
-      <option value="Grupo 12">Grupo 12</option>
-      <option value="Grupo 13">Grupo 13</option>
-    </select>
+  <div class="panel-heading">
+    <span class="step-number">1</span>
+    <div>
+      <h2>Identificá a tu equipo</h2>
+      <p>Seleccioná tu grupo y escribí el nombre con el que participarán.</p>
+    </div>
   </div>
 
-  <div class="field-group">
-    <label for="teamName">Nombre del equipo</label><br>
-    <input
-      type="text"
-      id="teamName"
-      placeholder="Ej: ByteForce"
-      maxlength="60"
-      autocomplete="off"
-    >
+  <div class="form-row">
+
+    <div class="form-field">
+      <label for="groupSelect">Grupo</label>
+
+      <select id="groupSelect">
+        <option value="">Seleccionar grupo</option>
+        <option value="Grupo 3">Grupo 3</option>
+        <option value="Grupo 5">Grupo 5</option>
+        <option value="Grupo 6">Grupo 6</option>
+        <option value="Grupo 7">Grupo 7</option>
+        <option value="Grupo 8">Grupo 8</option>
+        <option value="Grupo 10">Grupo 10</option>
+        <option value="Grupo 11">Grupo 11</option>
+        <option value="Grupo 12">Grupo 12</option>
+        <option value="Grupo 13">Grupo 13</option>
+      </select>
+    </div>
+
+    <div class="form-field team-field">
+      <label for="teamName">Nombre del equipo</label>
+
+      <input
+        type="text"
+        id="teamName"
+        placeholder="Ej: ByteForce"
+        maxlength="60"
+        autocomplete="off"
+      >
+    </div>
+
   </div>
 
-  <div class="status" id="statusLine">
-    Seleccioná tu grupo y escribí el nombre del equipo para empezar.
+  <div class="form-status" id="statusLine">
+    Completá los datos para elegir un eje.
   </div>
 
 </div>
 
+
+<div class="topics-section">
+
+  <div class="section-heading">
+    <span class="step-number">2</span>
+
+    <div>
+      <h2>Elegí un eje temático</h2>
+      <p>Cada eje admite hasta 2 equipos.</p>
+    </div>
+  </div>
+
   <div class="grid" id="grid"></div>
+
+</div>
+
+
+<div class="submit-area" id="submitArea">
+
+  <div class="submit-content">
+
+    <span class="step-number">3</span>
+
+    <div>
+      <div class="submit-label">Confirmá tu elección</div>
+
+      <div
+        id="selectedTopicInfo"
+        class="selected-topic-info"
+      >
+        Primero seleccioná un eje.
+      </div>
+    </div>
+
+  </div>
+
+  <button
+    type="button"
+    id="submitBtn"
+    class="submit-btn"
+    disabled
+  >
+    Confirmar y enviar
+  </button>
+
+</div>
+
+  <div class="grid" id="grid"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="submit-area">
+    <div id="selectedTopicInfo" class="selected-topic-info">
+      Todavía no seleccionaste un eje.
+    </div>
+
+    <button
+      type="button"
+      id="submitBtn"
+      class="submit-btn"
+      disabled
+    >
+      Confirmar y enviar selección
+    </button>
+  </div>
 
   <footer>
     <span class="hint">Los datos se comparten entre todos los que abren este tablero.</span>
@@ -514,6 +807,8 @@ let assignments = [];
 let myGroup = null;
 let teamName = '';
 let pendingTopic = null;
+const submitBtn = document.getElementById('submitBtn');
+const selectedTopicInfo = document.getElementById('selectedTopicInfo');
 
 const grid = document.getElementById('grid');
 const groupSelect = document.getElementById('groupSelect');
@@ -552,10 +847,22 @@ groupSelect.addEventListener('change', () => {
 
   myGroup = groupSelect.value || null;
 
+  pendingTopic = null;
+
+  selectedTopicInfo.innerHTML =
+    'Primero seleccioná un eje.';
+
+  submitBtn.disabled = true;
+
   if(myGroup){
-    sessionStorage.setItem('hk_my_group', myGroup);
-  } else {
-    sessionStorage.removeItem('hk_my_group');
+    sessionStorage.setItem(
+      'hk_my_group',
+      myGroup
+    );
+  }else{
+    sessionStorage.removeItem(
+      'hk_my_group'
+    );
   }
 
   render();
@@ -644,15 +951,12 @@ async function loadAssignments(){
 
 function myAssignedTopic(){
 
-  if(!myGroup) return null;
+  const selection = getGroupSelection();
 
-  const selection = assignments.find(
-    item =>
-      String(item.grupo).toLowerCase() ===
-      String(myGroup).toLowerCase()
-  );
+  return selection
+    ? selection.ejeId
+    : null;
 
-  return selection ? selection.ejeId : null;
 }
 
 function topicAssignments(topicId){
@@ -668,6 +972,18 @@ function topicIsFull(topic){
   const selected = topicAssignments(topic.id);
 
   return selected.length >= Number(topic.cupo || 2);
+
+}
+
+function getGroupSelection(){
+
+  if(!myGroup) return null;
+
+  return assignments.find(
+    item =>
+      String(item.grupo).toLowerCase() ===
+      String(myGroup).toLowerCase()
+  ) || null;
 
 }
 
@@ -687,6 +1003,7 @@ function render(){
 
 
   const mine = myAssignedTopic();
+  const groupSelection = getGroupSelection();
 
 
   // =========================
@@ -695,31 +1012,54 @@ function render(){
 
   if(!myGroup){
 
-    statusLine.innerHTML =
-      'Seleccioná tu grupo para empezar.';
+  statusLine.innerHTML =
+    'Seleccioná tu grupo y escribí el nombre del equipo.';
 
-  }else if(!teamName){
+  teamNameInput.disabled = false;
+
+
+}else if(groupSelection){
+
+  /*
+   * El grupo YA PARTICIPÓ.
+   * Utilizamos los datos guardados en Google Sheets,
+   * no los que tenga el navegador.
+   */
+
+  teamNameInput.value =
+    groupSelection.equipo;
+
+  teamName =
+    groupSelection.equipo;
+
+  teamNameInput.disabled = true;
+
+  submitBtn.disabled = true;
+
+  pendingTopic = null;
+
+  selectedTopicInfo.innerHTML =
+    'Selección ya registrada: <strong>' +
+    escapeHTML(groupSelection.eje) +
+    ' · ' +
+    escapeHTML(groupSelection.tema) +
+    '</strong>';
+
+  statusLine.innerHTML =
+    '✓ <strong>' +
+    escapeHTML(groupSelection.equipo) +
+    '</strong> ya realizó su elección.';
+
+
+}else{
+
+  teamNameInput.disabled = false;
+
+  if(!teamName){
 
     statusLine.innerHTML =
       myGroup +
       ': escribí el nombre de tu equipo para continuar.';
-
-  }else if(mine){
-
-    const selection = assignments.find(
-      item =>
-        String(item.grupo).toLowerCase() ===
-        String(myGroup).toLowerCase()
-    );
-
-    statusLine.innerHTML =
-      '<strong>' +
-      escapeHTML(selection.equipo) +
-      '</strong> · ' +
-      myGroup +
-      ' ya eligió: <strong>' +
-      escapeHTML(selection.tema) +
-      '</strong>';
 
   }else{
 
@@ -728,9 +1068,11 @@ function render(){
       escapeHTML(teamName) +
       '</strong> · ' +
       myGroup +
-      ': elegí un eje disponible.';
+      ': seleccioná uno de los ejes disponibles.';
 
   }
+
+}
 
 
   // =========================
@@ -753,6 +1095,22 @@ function render(){
 
     div.className = 'topic';
 
+    if(
+      groupSelection &&
+      groupSelection.ejeId === topic.id
+    ){
+
+      div.classList.add('mine');
+
+    }
+
+    if(
+      pendingTopic &&
+      pendingTopic.id === topic.id
+    ){
+      div.classList.add('selected');
+    }
+
 
     const ejeEl = document.createElement('div');
 
@@ -771,6 +1129,16 @@ function render(){
     const tagEl = document.createElement('div');
 
     tagEl.className = 'topic-tag';
+
+    if(
+      groupSelection &&
+      groupSelection.ejeId === topic.id
+    ){
+
+      tagEl.textContent =
+        '✓ Eje elegido por tu equipo';
+
+    }
 
 
     // =========================
@@ -819,7 +1187,7 @@ function render(){
       if(
         !myGroup ||
         !teamName ||
-        mine
+        groupSelection
       ){
 
         div.classList.add('disabled');
@@ -828,7 +1196,7 @@ function render(){
 
         div.addEventListener(
           'click',
-          () => openConfirm(topic)
+          () => selectTopic(topic)
         );
 
       }
@@ -875,6 +1243,46 @@ function openConfirm(topic){
     'Confirmá con tu equipo antes de continuar.';
 
   overlay.style.display = 'flex';
+}
+
+function selectTopic(topic){
+
+  if(!myGroup){
+
+    showToast(
+      'Primero seleccioná tu grupo.',
+      'error'
+    );
+
+    return;
+  }
+
+  teamName = teamNameInput.value.trim();
+
+  if(!teamName){
+
+    showToast(
+      'Escribí el nombre de tu equipo.',
+      'error'
+    );
+
+    teamNameInput.focus();
+
+    return;
+  }
+
+  pendingTopic = topic;
+
+  selectedTopicInfo.innerHTML =
+    'Eje seleccionado: <strong>' +
+    escapeHTML(topic.eje) +
+    ' · ' +
+    escapeHTML(topic.name) +
+    '</strong>';
+
+  submitBtn.disabled = false;
+
+  render();
 }
 
 function escapeHTML(value){
