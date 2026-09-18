@@ -662,8 +662,8 @@
         <div class="label">grupos con eje</div>
       </div>
       <div class="stat">
-        <div class="num" id="availableNum">0</div>
-        <div class="label">ejes disponibles</div>
+        <div class="num" id="selectedAxesNum">0</div>
+        <div class="label">ejes seleccionados</div>
       </div>
     </div>
   </div>
@@ -843,7 +843,7 @@ const groupSelect = document.getElementById('groupSelect');
 const teamNameInput = document.getElementById('teamName');
 const statusLine = document.getElementById('statusLine');
 const progressNum = document.getElementById('progressNum');
-const availableNum = document.getElementById('availableNum');
+const selectedAxesNum = document.getElementById('selectedAxesNum');
 const overlay = document.getElementById('overlay');
 const modalTitle = document.getElementById('modalTitle');
 const modalText = document.getElementById('modalText');
@@ -1046,19 +1046,25 @@ function registeredGroupCount(){
   ).size;
 }
 
+function selectedAxesCount(){
+  return new Set(
+    assignments
+      .map(item => normalizeValue(item.ejeId))
+      .filter(Boolean)
+  ).size;
+}
+
 function render(){
 
   const registeredGroups = registeredGroupCount();
 
-  const availableTopics = topics.filter(
-    topic => !topicIsFull(topic)
-  ).length;
+  const selectedAxes = selectedAxesCount();
 
   progressNum.textContent =
     registeredGroups + '/' + NUM_GROUPS;
 
-  availableNum.textContent =
-    availableTopics;
+  selectedAxesNum.textContent =
+    selectedAxes;
 
 
   const mine = myAssignedTopic();
