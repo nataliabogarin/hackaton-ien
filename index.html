@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tablero de temas — Hackathon IEN</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --purple-deep: #2B0F4E;
+    --purple-mid: #4A1750;
+    --maroon: #6E1B4A;
+    --gold: #F5C518;
+    --gold-soft: #FBE29A;
+    --ink: #241154;
+    --bg: #FAF8FC;
+    --panel: #FFFFFF;
+    --card-border: #E9E2F2;
+    --text-dim: #7A7190;
+    --teal: #1F9D7C;
+    --teal-bg: #E7F7F1;
+    --danger: #D6395A;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
+  .topbar{
+    background: var(--purple-deep);
+    color: #fff;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    text-align: center;
+    padding: 8px 16px;
+  }
+
+  .wrap{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  .brandbar{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    padding: 22px 0 8px;
+  }
+  .logo-badge{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .brand-name{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .brand-name span{
+    display:block;
+    font-weight: 500;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+
+  .hero{
+    background: linear-gradient(120deg, var(--purple-deep), var(--maroon) 85%);
+    border-radius: 22px;
+    padding: 38px 34px;
+    margin: 18px 0 30px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after{
+    content: "";
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,197,24,0.18), transparent 70%);
+  }
+  .badge-pill{
+    display:inline-block;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    padding: 6px 16px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .hero h1{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 2.1rem;
+    margin: 0 0 6px;
+    line-height: 1.15;
+  }
+  .hero h1 .accent{
+    color: var(--gold);
+  }
+  .hero p{
+    margin: 10px 0 0;
+    max-width: 52ch;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.96rem;
+    line-height: 1.55;
+    position: relative;
+  }
+
+  .stat-row{
+    display:flex;
+    gap: 22px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .stat{
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 14px;
+    padding: 12px 18px;
+  }
+  .stat .num{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat .label{
+    font-size: 0.74rem;
+    color: rgba(255,255,255,0.75);
+    margin-top: 3px;
+  }
+
+  .picker{
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+    display:flex;
+    align-items:center;
+    gap: 18px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 10px rgba(43,15,78,0.04);
+  }
+  .picker label{
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .picker select{
+    background: var(--bg);
+    border: 1.5px solid var(--card-border);
+    color: var(--ink);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-family: inherit;
+    font-weight: 600;
+    min-width: 160px;
+    margin-top: 4px;
+  }
+  .picker .status{
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+  .picker .status strong{
+    color: var(--teal);
+  }
+  .picker select,
+.picker input{
+  background: var(--bg);
+  border: 1.5px solid var(--card-border);
+  color: var(--ink);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  font-weight: 600;
+  min-width: 190px;
+  margin-top: 4px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.picker input{
+  min-width: 230px;
+}
+
+.picker select:focus,
+.picker input:focus{
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(245,197,24,0.15);
+}
+
+.picker input::placeholder{
+  color: #AAA2B7;
+  font-weight: 400;
+}
+
+.field-group{
+  flex-shrink: 0;
+}
+
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+  }
+
+  .topic{
+    background: var(--panel);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 18px;
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 130px;
+    cursor: pointer;
+    transition: border-color .15s ease, transform .12s ease, box-shadow .15s ease;
+  }
+  .topic:hover:not(.taken):not(.disabled){
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(43,15,78,0.08);
+  }
+  .topic-eje{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: #B8860B;
+    background: var(--gold-soft);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    width: fit-content;
+  }
+  .topic.taken .topic-eje{
+    color: var(--teal);
+    background: #D6F0E8;
+  }
+  .topic-name{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.02rem;
+    line-height: 1.32;
+    color: var(--ink);
+  }
+  .topic-tag{
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-top: auto;
+  }
+  .topic.taken{
+    border-color: var(--teal);
+    background: var(--teal-bg);
+    cursor: default;
+  }
+  .topic.taken .topic-tag{
+    color: var(--teal);
+    font-weight: 700;
+  }
+  .topic.taken.mine{
+    box-shadow: 0 0 0 2px var(--teal) inset;
+  }
+  .topic.disabled{
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  footer{
+    margin-top: 36px;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .ghost-btn{
+    background: transparent;
+    border: 1.5px solid var(--card-border);
+    color: var(--text-dim);
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ghost-btn:hover{
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .hint{
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  .overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(36,17,84,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 20px;
+    z-index: 10;
+  }
+  .modal{
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 28px;
+    max-width: 380px;
+    width: 100%;
+  }
+  .modal h2{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .modal p{
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 20px;
+  }
+  .modal .row{
+    display:flex;
+    gap: 10px;
+  }
+  .btn{
+    flex:1;
+    padding: 12px;
+    border-radius: 999px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .btn-confirm{ background: var(--gold); color: var(--ink); }
+  .btn-cancel{ background: var(--bg); color: var(--text-dim); border: 1.5px solid var(--card-border); }
+
+  .toast{
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 0.86rem;
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .toast.show{
+    opacity: 1;
+    transform: translateX(-50%) translateY(-6px);
+  }
+  .toast.error{ background: var(--danger); }
+  .toast.success{ background: var(--teal); }
+</style>
+</head>
+<body>
+
+<div class="topbar">Hackathon IEN · Elegí el tema de tu grupo antes de que se lo lleve otro equipo</div>
+
+<div class="wrap">
+
+  <div class="brandbar">
+    <div class="logo-badge">ien</div>
+    <div class="brand-name">Instituto Educativo Económico Nacional<span>Hackathon interno</span></div>
+  </div>
+
+  <div class="hero">
+    <span class="badge-pill">EJES TEMÁTICOS</span>
+    <h1>Elegí el eje<br>de <span class="accent">tu equipo</span></h1>
+    <p>Cada equipo debe elegir uno de los nueve ejes temáticos del IEN Challenge 2026 para desarrollar su proyecto. Cada eje puede ser tomado por un solo grupo: una vez confirmado, queda bloqueado para el resto.</p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="num" id="progressNum">0/9</div>
+        <div class="label">grupos con eje</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="availableNum">0</div>
+        <div class="label">ejes disponibles</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="picker">
+
+  <div class="field-group">
+    <label for="groupSelect">Tu grupo</label><br>
+    <select id="groupSelect">
+      <option value="">— elegir grupo —</option>
+      <option value="Grupo 3">Grupo 3</option>
+      <option value="Grupo 5">Grupo 5</option>
+      <option value="Grupo 6">Grupo 6</option>
+      <option value="Grupo 7">Grupo 7</option>
+      <option value="Grupo 8">Grupo 8</option>
+      <option value="Grupo 10">Grupo 10</option>
+      <option value="Grupo 11">Grupo 11</option>
+      <option value="Grupo 12">Grupo 12</option>
+      <option value="Grupo 13">Grupo 13</option>
+    </select>
+  </div>
+
+  <div class="field-group">
+    <label for="teamName">Nombre del equipo</label><br>
+    <input
+      type="text"
+      id="teamName"
+      placeholder="Ej: ByteForce"
+      maxlength="60"
+      autocomplete="off"
+    >
+  </div>
+
+  <div class="status" id="statusLine">
+    Seleccioná tu grupo y escribí el nombre del equipo para empezar.
+  </div>
+
+</div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <span class="hint">Los datos se comparten entre todos los que abren este tablero.</span>
+    <button class="ghost-btn" id="resetBtn" style="display:none;">Reiniciar tablero</button>
+  </footer>
+
+</div>
+
+<div class="overlay" id="overlay" style="display:none;">
+  <div class="modal">
+    <h2 id="modalTitle">Confirmar tema</h2>
+    <p id="modalText"></p>
+    <div class="row">
+      <button class="btn btn-cancel" id="modalCancel">Cancelar</button>
+      <button class="btn btn-confirm" id="modalConfirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbzx0x6-KLX8vj_CJZvrIDxfShiejvZEj-gYAhWLVofTlRvHRAPtJq8gyLGqtJ06eCblyg/exec;
+const GROUPS = [
+  'Grupo 3',
+  'Grupo 5',
+  'Grupo 6',
+  'Grupo 7',
+  'Grupo 8',
+  'Grupo 10',
+  'Grupo 11',
+  'Grupo 12',
+  'Grupo 13'
+];
+const NUM_GROUPS = GROUPS.length;
+//const TOPICS_KEY = 'hackathon:topics';
+//const ASSIGN_KEY = 'hackathon:assignments';
+
+/**  const DEFAULT_TOPICS = [
+  { id: 't1', eje: 'EJE 1', name: 'Ciberseguridad, Gobierno Digital y Datos', tag: 'Protección de datos y confianza digital' },
+  { id: 't2', eje: 'EJE 2', name: 'Plataforma de Distribución Colaborativa-Logística', tag: 'Un "Uber" para productos del interior' },
+  { id: 't3', eje: 'EJE 3', name: 'Innovación Tecnológica y Startups', tag: 'Un producto digital con potencial de mercado' },
+  { id: 't4', eje: 'EJE 4', name: 'Sostenibilidad y Medio Ambiente', tag: 'Monitorear, reducir o comunicar impacto ambiental' },
+  { id: 't5', eje: 'EJE 5', name: 'Educación, Inclusión y Transformación Digital', tag: 'Acceso, inclusión y calidad educativa' },
+  { id: 't6', eje: 'EJE 6', name: 'Economía Digital y Comercio Electrónico', tag: 'Herramientas para vender y crecer online' },
+  { id: 't7', eje: 'EJE 7', name: 'Cultura, Turismo y Economía Creativa', tag: 'Turismo, cultura e industrias creativas' },
+  { id: 't8', eje: 'EJE 8', name: 'Salud y Bienestar Digital', tag: 'Tecnología para el cuidado físico y emocional' },
+  { id: 't9', eje: 'EJE 9', name: 'Agroindustria y Tecnología Agropecuaria', tag: 'Tecnología aplicada al campo' }
+];*/
+
+let topics = [];
+let assignments = [];
+let myGroup = null;
+let teamName = '';
+let pendingTopic = null;
+
+const grid = document.getElementById('grid');
+const groupSelect = document.getElementById('groupSelect');
+const teamNameInput = document.getElementById('teamName');
+const statusLine = document.getElementById('statusLine');
+const progressNum = document.getElementById('progressNum');
+const availableNum = document.getElementById('availableNum');
+const overlay = document.getElementById('overlay');
+const modalTitle = document.getElementById('modalTitle');
+const modalText = document.getElementById('modalText');
+const toastEl = document.getElementById('toast');
+
+function showToast(msg, type){
+  toastEl.textContent = msg;
+  toastEl.className = 'toast show ' + (type || '');
+  setTimeout(() => { toastEl.className = 'toast'; }, 2600);
+}
+
+function initGroupSelect(){
+
+  const savedGroup = sessionStorage.getItem('hk_my_group');
+  const savedTeam = sessionStorage.getItem('hk_team_name');
+
+  if(savedGroup && GROUPS.includes(savedGroup)){
+    groupSelect.value = savedGroup;
+    myGroup = savedGroup;
+  }
+
+  if(savedTeam){
+    teamNameInput.value = savedTeam;
+    teamName = savedTeam;
+  }
+}
+
+groupSelect.addEventListener('change', () => {
+
+  myGroup = groupSelect.value || null;
+
+  if(myGroup){
+    sessionStorage.setItem('hk_my_group', myGroup);
+  } else {
+    sessionStorage.removeItem('hk_my_group');
+  }
+
+  render();
+
+});
+
+teamNameInput.addEventListener('input', () => {
+
+  teamName = teamNameInput.value.trim();
+
+  if(teamName){
+
+    sessionStorage.setItem('hk_team_name', teamName);
+
+  } else {
+
+    sessionStorage.removeItem('hk_team_name');
+
+  }
+
+  render();
+
+});
+
+async function loadTopics(){
+
+  try{
+
+    const response = await fetch(
+      API_URL + '?action=topics'
+    );
+
+    if(!response.ok){
+      throw new Error('Error HTTP ' + response.status);
+    }
+
+    const data = await response.json();
+
+    if(!data.ok){
+      throw new Error(data.error || 'No se pudieron cargar los temas');
+    }
+
+    topics = data.topics || [];
+
+  }catch(error){
+
+    console.error('Error cargando temas:', error);
+
+    showToast(
+      'No se pudieron cargar los temas.',
+      'error'
+    );
+
+    topics = [];
+  }
+}
+
+async function loadAssignments(){
+
+  try{
+
+    const response = await fetch(
+      API_URL + '?action=selections'
+    );
+
+    if(!response.ok){
+      throw new Error('Error HTTP ' + response.status);
+    }
+
+    const data = await response.json();
+
+    if(!data.ok){
+      throw new Error(
+        data.error || 'No se pudieron cargar las selecciones'
+      );
+    }
+
+    assignments = data.selections || [];
+
+  }catch(error){
+
+    console.error('Error cargando selecciones:', error);
+
+  }
+}
+
+function myAssignedTopic(){
+
+  if(!myGroup) return null;
+
+  const selection = assignments.find(
+    item =>
+      String(item.grupo).toLowerCase() ===
+      String(myGroup).toLowerCase()
+  );
+
+  return selection ? selection.ejeId : null;
+}
+
+function topicAssignments(topicId){
+
+  return assignments.filter(
+    item => item.ejeId === topicId
+  );
+
+}
+
+function topicIsFull(topic){
+
+  const selected = topicAssignments(topic.id);
+
+  return selected.length >= Number(topic.cupo || 2);
+
+}
+
+function render(){
+
+  const registeredGroups = assignments.length;
+
+  const availableTopics = topics.filter(
+    topic => !topicIsFull(topic)
+  ).length;
+
+  progressNum.textContent =
+    registeredGroups + '/' + NUM_GROUPS;
+
+  availableNum.textContent =
+    availableTopics;
+
+
+  const mine = myAssignedTopic();
+
+
+  // =========================
+  // ESTADO DEL EQUIPO
+  // =========================
+
+  if(!myGroup){
+
+    statusLine.innerHTML =
+      'Seleccioná tu grupo para empezar.';
+
+  }else if(!teamName){
+
+    statusLine.innerHTML =
+      myGroup +
+      ': escribí el nombre de tu equipo para continuar.';
+
+  }else if(mine){
+
+    const selection = assignments.find(
+      item =>
+        String(item.grupo).toLowerCase() ===
+        String(myGroup).toLowerCase()
+    );
+
+    statusLine.innerHTML =
+      '<strong>' +
+      escapeHTML(selection.equipo) +
+      '</strong> · ' +
+      myGroup +
+      ' ya eligió: <strong>' +
+      escapeHTML(selection.tema) +
+      '</strong>';
+
+  }else{
+
+    statusLine.innerHTML =
+      '<strong>' +
+      escapeHTML(teamName) +
+      '</strong> · ' +
+      myGroup +
+      ': elegí un eje disponible.';
+
+  }
+
+
+  // =========================
+  // TARJETAS
+  // =========================
+
+  grid.innerHTML = '';
+
+
+  topics.forEach(topic => {
+
+    const selected = topicAssignments(topic.id);
+
+    const cupo = Number(topic.cupo || 2);
+
+    const full = selected.length >= cupo;
+
+
+    const div = document.createElement('div');
+
+    div.className = 'topic';
+
+
+    const ejeEl = document.createElement('div');
+
+    ejeEl.className = 'topic-eje';
+
+    ejeEl.textContent = topic.eje || '';
+
+
+    const nameEl = document.createElement('div');
+
+    nameEl.className = 'topic-name';
+
+    nameEl.textContent = topic.name;
+
+
+    const tagEl = document.createElement('div');
+
+    tagEl.className = 'topic-tag';
+
+
+    // =========================
+    // TEMA COMPLETO
+    // =========================
+
+    if(full){
+
+      div.classList.add('taken');
+
+      tagEl.textContent =
+        'Completo — ' +
+        selected.length +
+        ' de ' +
+        cupo +
+        ' equipos';
+
+
+    // =========================
+    // TODAVÍA DISPONIBLE
+    // =========================
+
+    }else{
+
+      if(selected.length === 0){
+
+        tagEl.textContent =
+          topic.tag +
+          ' · 0 de ' +
+          cupo +
+          ' equipos';
+
+      }else{
+
+        tagEl.textContent =
+          selected.length +
+          ' de ' +
+          cupo +
+          ' equipos · queda ' +
+          (cupo - selected.length) +
+          ' lugar';
+
+      }
+
+
+      if(
+        !myGroup ||
+        !teamName ||
+        mine
+      ){
+
+        div.classList.add('disabled');
+
+      }else{
+
+        div.addEventListener(
+          'click',
+          () => openConfirm(topic)
+        );
+
+      }
+
+    }
+
+
+    div.appendChild(ejeEl);
+
+    div.appendChild(nameEl);
+
+    div.appendChild(tagEl);
+
+    grid.appendChild(div);
+
+  });
+
+}
+
+function openConfirm(topic){
+
+  if(!myGroup){
+    showToast('Primero seleccioná tu grupo.', 'error');
+    return;
+  }
+
+  teamName = teamNameInput.value.trim();
+
+  if(!teamName){
+    showToast('Escribí el nombre de tu equipo.', 'error');
+    teamNameInput.focus();
+    return;
+  }
+
+  pendingTopic = topic;
+
+  modalTitle.textContent = 'Confirmar tema';
+
+  modalText.innerHTML =
+    '<strong>' + myGroup + '</strong><br>' +
+    'Equipo: <strong>' + escapeHTML(teamName) + '</strong><br><br>' +
+    'Van a seleccionar:<br>' +
+    '<strong>' + escapeHTML(topic.name) + '</strong><br><br>' +
+    'Confirmá con tu equipo antes de continuar.';
+
+  overlay.style.display = 'flex';
+}
+
+function escapeHTML(value){
+  const div = document.createElement('div');
+  div.textContent = value;
+  return div.innerHTML;
+}
+
+document.getElementById('modalCancel').addEventListener('click', () => {
+  overlay.style.display = 'none';
+  pendingTopic = null;
+});
+
+document
+  .getElementById('modalConfirm')
+  .addEventListener('click', async () => {
+
+    if(!pendingTopic || !myGroup) return;
+
+
+    teamName = teamNameInput.value.trim();
+
+
+    if(!teamName){
+
+      showToast(
+        'Escribí el nombre de tu equipo.',
+        'error'
+      );
+
+      return;
+    }
+
+
+    // Guardamos una referencia porque
+    // después pendingTopic se limpia.
+
+    const selectedTopic = pendingTopic;
+
+    overlay.style.display = 'none';
+
+    pendingTopic = null;
+
+
+    showToast(
+      'Registrando selección...',
+      ''
+    );
+
+
+    try{
+
+      const response = await fetch(API_URL, {
+
+        method: 'POST',
+
+        body: JSON.stringify({
+
+          action: 'select',
+
+          group: myGroup,
+
+          team: teamName,
+
+          topicId: selectedTopic.id
+
+        })
+
+      });
+
+
+      if(!response.ok){
+
+        throw new Error(
+          'Error HTTP ' + response.status
+        );
+
+      }
+
+
+      const result = await response.json();
+
+
+      // =============================
+      // API RECHAZÓ LA SELECCIÓN
+      // =============================
+
+      if(!result.ok){
+
+        showToast(
+          result.error ||
+          'No se pudo registrar la selección.',
+          'error'
+        );
+
+        await loadAssignments();
+
+        render();
+
+        return;
+      }
+
+
+      // =============================
+      // SELECCIÓN CORRECTA
+      // =============================
+
+      showToast(
+        '¡Tema confirmado para ' +
+        myGroup +
+        '!',
+        'success'
+      );
+
+
+      await loadAssignments();
+
+      render();
+
+
+    }catch(error){
+
+      console.error(error);
+
+      showToast(
+        'No se pudo conectar con el servidor. Probá nuevamente.',
+        'error'
+      );
+
+    }
+
+  });
+
+document
+  .getElementById('resetBtn')
+  .addEventListener('click', async () => {
+
+    const password = prompt(
+      'Ingresá la clave de administración:'
+    );
+
+    if(!password) return;
+
+
+    const confirmar = confirm(
+      'Esto eliminará TODAS las selecciones realizadas.\n\n¿Querés continuar?'
+    );
+
+    if(!confirmar) return;
+
+
+    try {
+
+      const response = await fetch(API_URL, {
+
+        method: 'POST',
+
+        body: JSON.stringify({
+          action: 'reset',
+          password: password
+        })
+
+      });
+
+
+      const result = await response.json();
+
+
+      if(!result.ok){
+
+        showToast(
+          result.error || 'No se pudo reiniciar.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      showToast(
+        'Tablero reiniciado correctamente.',
+        'success'
+      );
+
+
+      await loadAssignments();
+
+      render();
+
+
+    } catch(error){
+
+      console.error(error);
+
+      showToast(
+        'No se pudo conectar con el servidor.',
+        'error'
+      );
+
+    }
+
+  });
+
+async function poll(){
+  await loadAssignments();
+  render();
+}
+
+async function init(){
+  initGroupSelect();
+  await loadTopics();
+  await loadAssignments();
+  render();
+  setInterval(poll, 4000);
+}
+
+init();
+</script>
+</body>
+</html>
