@@ -626,7 +626,12 @@
   <div class="hero">
     <span class="badge-pill">EJES TEMÁTICOS</span>
     <h1>Elegí el eje<br>de <span class="accent">tu equipo</span></h1>
-    <p>Cada equipo debe elegir uno de los nueve ejes temáticos del IEN Challenge 2026 para desarrollar su proyecto. Cada eje puede ser tomado por un solo grupo: una vez confirmado, queda bloqueado para el resto.</p>
+    <p>
+    Cada equipo debe elegir uno de los nueve ejes temáticos del
+    IEN Challenge 2026 para desarrollar su proyecto.
+    Cada eje admite hasta dos equipos y cada grupo puede realizar
+    una única elección.
+  </p>
     <div class="stat-row">
       <div class="stat">
         <div class="num" id="progressNum">0/9</div>
@@ -689,6 +694,7 @@
 </div>
 
 
+
 <div class="topics-section">
 
   <div class="section-heading">
@@ -712,7 +718,10 @@
     <span class="step-number">3</span>
 
     <div>
-      <div class="submit-label">Confirmá tu elección</div>
+
+      <div class="submit-label">
+        Confirmá tu elección
+      </div>
 
       <div
         id="selectedTopicInfo"
@@ -720,6 +729,7 @@
       >
         Primero seleccioná un eje.
       </div>
+
     </div>
 
   </div>
@@ -735,28 +745,22 @@
 
 </div>
 
-  <div class="grid" id="grid"></div>
-  <div class="grid" id="grid"></div>
 
-  <div class="submit-area">
-    <div id="selectedTopicInfo" class="selected-topic-info">
-      Todavía no seleccionaste un eje.
-    </div>
+<footer>
 
-    <button
-      type="button"
-      id="submitBtn"
-      class="submit-btn"
-      disabled
-    >
-      Confirmar y enviar selección
-    </button>
-  </div>
+  <span class="hint">
+    Los datos se comparten entre todos los que abren este tablero.
+  </span>
 
-  <footer>
-    <span class="hint">Los datos se comparten entre todos los que abren este tablero.</span>
-    <button class="ghost-btn" id="resetBtn" style="display:none;">Reiniciar tablero</button>
-  </footer>
+  <button
+    class="ghost-btn"
+    id="resetBtn"
+    style="display:none;"
+  >
+    Reiniciar tablero
+  </button>
+
+</footer>
 
 </div>
 
@@ -774,7 +778,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzx0x6-KLX8vj_CJZvrIDxfShiejvZEj-gYAhWLVofTlRvHRAPtJq8gyLGqtJ06eCblyg/exec;
+const API_URL = 'https://script.google.com/macros/s/AKfycbzx0x6-KLX8vj_CJZvrIDxfShiejvZEj-gYAhWLVofTlRvHRAPtJq8gyLGqtJ06eCblyg/exec';
 const GROUPS = [
   'Grupo 3',
   'Grupo 5',
@@ -1131,14 +1135,70 @@ function render(){
     tagEl.className = 'topic-tag';
 
     if(
-      groupSelection &&
-      groupSelection.ejeId === topic.id
-    ){
+  groupSelection &&
+  groupSelection.ejeId === topic.id
+){
 
-      tagEl.textContent =
-        '✓ Eje elegido por tu equipo';
+  div.classList.add('mine');
+  div.classList.add('disabled');
 
-    }
+  tagEl.textContent =
+    '✓ Eje elegido por tu equipo';
+
+
+}else if(full){
+
+  div.classList.add('taken');
+
+  tagEl.textContent =
+    'Completo — ' +
+    selected.length +
+    ' de ' +
+    cupo +
+    ' equipos';
+
+
+}else{
+
+  if(selected.length === 0){
+
+    tagEl.textContent =
+      topic.tag +
+      ' · 0 de ' +
+      cupo +
+      ' equipos';
+
+  }else{
+
+    tagEl.textContent =
+      selected.length +
+      ' de ' +
+      cupo +
+      ' equipos · queda ' +
+      (cupo - selected.length) +
+      ' lugar';
+
+  }
+
+
+  if(
+    !myGroup ||
+    !teamName ||
+    groupSelection
+  ){
+
+    div.classList.add('disabled');
+
+  }else{
+
+    div.addEventListener(
+      'click',
+      () => selectTopic(topic)
+    );
+
+  }
+
+}
 
 
     // =========================
@@ -1285,6 +1345,46 @@ function selectTopic(topic){
   render();
 }
 
+submitBtn.addEventListener('click', () => {
+
+  if(!pendingTopic){
+
+    showToast(
+      'Primero seleccioná un eje.',
+      'error'
+    );
+
+    return;
+  }
+
+  if(getGroupSelection()){
+
+    showToast(
+      'Este grupo ya realizó su elección.',
+      'error'
+    );
+
+    return;
+  }
+
+  teamName = teamNameInput.value.trim();
+
+  if(!teamName){
+
+    showToast(
+      'Escribí el nombre de tu equipo.',
+      'error'
+    );
+
+    teamNameInput.focus();
+
+    return;
+  }
+
+  openConfirm(pendingTopic);
+
+});
+
 function escapeHTML(value){
   const div = document.createElement('div');
   div.textContent = value;
@@ -1293,7 +1393,6 @@ function escapeHTML(value){
 
 document.getElementById('modalCancel').addEventListener('click', () => {
   overlay.style.display = 'none';
-  pendingTopic = null;
 });
 
 document
@@ -1331,6 +1430,23 @@ document
       'Registrando selección...',
       ''
     );
+
+    if(result.ok){
+
+      pendingTopic = null;
+
+      showToast(
+        '¡Tema confirmado para ' +
+        myGroup +
+        '!',
+        'success'
+      );
+
+      await loadAssignments();
+
+      render();
+
+    }
 
 
     try{
@@ -1377,6 +1493,8 @@ document
           'No se pudo registrar la selección.',
           'error'
         );
+
+        pendingTopic = null;
 
         await loadAssignments();
 
