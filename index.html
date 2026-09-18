@@ -658,11 +658,11 @@
   </p>
     <div class="stat-row">
       <div class="stat">
-        <div class="num" id="progressNum">0/9</div>
+        <div class="num" id="progressNum">.../9</div>
         <div class="label">grupos con eje</div>
       </div>
       <div class="stat">
-        <div class="num" id="selectedAxesNum">0</div>
+        <div class="num" id="selectedAxesNum">...</div>
         <div class="label">ejes seleccionados</div>
       </div>
     </div>
@@ -835,6 +835,7 @@ let assignments = [];
 let myGroup = null;
 let teamName = '';
 let pendingTopic = null;
+let assignmentsLoaded = false;
 const submitBtn = document.getElementById('submitBtn');
 const selectedTopicInfo = document.getElementById('selectedTopicInfo');
 
@@ -853,6 +854,20 @@ function showToast(msg, type){
   toastEl.textContent = msg;
   toastEl.className = 'toast show ' + (type || '');
   setTimeout(() => { toastEl.className = 'toast'; }, 2600);
+}
+
+function apiUrl(action){
+  return (
+    API_URL +
+    '?action=' +
+    encodeURIComponent(action) +
+    '&_=' +
+    Date.now()
+  );
+}
+
+function sleep(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function initGroupSelect(){
@@ -920,7 +935,8 @@ async function loadTopics(){
   try{
 
     const response = await fetch(
-      API_URL + '?action=topics'
+      apiUrl('topics'),
+      { cache: 'no-store' }
     );
 
     if(!response.ok){
@@ -953,7 +969,8 @@ async function loadAssignments(options = {}){
   try{
 
     const response = await fetch(
-      API_URL + '?action=selections'
+      apiUrl('selections'),
+      { cache: 'no-store' }
     );
 
     if(!response.ok){
@@ -982,11 +999,32 @@ async function loadAssignments(options = {}){
     }
 
     assignments = nextAssignments;
+    assignmentsLoaded = true;
 
   }catch(error){
 
+    assignmentsLoaded = false;
+
     console.error('Error cargando selecciones:', error);
 
+  }
+}
+
+async function loadAssignmentsWithRetry(options = {}){
+  const attempts = options.attempts || 3;
+
+  for(let attempt = 1; attempt <= attempts; attempt++){
+    await loadAssignments(options);
+
+    if(
+      assignments.length > 0 ||
+      options.allowEmpty ||
+      attempt === attempts
+    ){
+      return;
+    }
+
+    await sleep(700);
   }
 }
 
@@ -1056,6 +1094,16 @@ function selectedAxesCount(){
 
 function render(){
 
+  if(!assignmentsLoaded){
+
+    progressNum.textContent =
+      '.../' + NUM_GROUPS;
+
+    selectedAxesNum.textContent =
+      '...';
+
+  }else{
+
   const registeredGroups = registeredGroupCount();
 
   const selectedAxes = selectedAxesCount();
@@ -1065,6 +1113,8 @@ function render(){
 
   selectedAxesNum.textContent =
     selectedAxes;
+
+  }
 
 
   const mine = myAssignedTopic();
@@ -1616,7 +1666,7 @@ async function poll(){
 async function init(){
   initGroupSelect();
   await loadTopics();
-  await loadAssignments();
+  await loadAssignmentsWithRetry({ attempts: 4 });
   render();
   setInterval(poll, 4000);
 }
